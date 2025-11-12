@@ -61,3 +61,13 @@ app.post("/api/data", async (req, res) => {
 
 // --- Start server ---
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+// --- Fetch latest data route ---
+app.get("/api/data/latest", async (req, res) => {
+  try {
+    const latestData = await SensorData.find().sort({ timestamp: -1 }).limit(20);
+    res.json(latestData.reverse()); // reverse for chronological order
+  } catch (err) {
+    console.error("❌ Error fetching data:", err.message);
+    res.status(500).json({ error: "Failed to fetch data" });
+  }
+});
